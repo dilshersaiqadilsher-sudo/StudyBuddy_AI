@@ -1,200 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Ultra Smart AI Friend</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  height: 100vh;
-  background: #0f172a;
-  font-family: system-ui, Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #e5e7eb;
+*{
+    box-sizing:border-box;
+    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
 }
-
-.app {
-  width: 100%;
-  max-width: 460px;
-  height: 95vh;
-  background: #020617;
-  display: flex;
-  flex-direction: column;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 0 40px rgba(0,0,0,0.7);
+body{
+    margin:0;
+    height:100vh;
+    background: radial-gradient(circle at top, #0f1b3d, #050814);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
 }
-
-.header {
-  padding: 16px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 18px;
-  background: #020617;
-  border-bottom: 1px solid #1e293b;
+.app{
+    width:380px;
+    max-width:95%;
+    height:620px;
+    background: linear-gradient(180deg,#0b1533,#040710);
+    border-radius:18px;
+    box-shadow:0 0 40px rgba(0,0,0,0.7);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
-
-.chat {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
+.header{
+    padding:16px;
+    text-align:center;
+    font-size:20px;
+    font-weight:600;
+    background:linear-gradient(90deg,#1f6cff,#6aa9ff);
 }
-
-.msg {
-  max-width: 85%;
-  margin-bottom: 12px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  line-height: 1.4;
-  white-space: pre-wrap;
+.sub{
+    font-size:12px;
+    opacity:.9;
 }
-
-.user {
-  background: #2563eb;
-  align-self: flex-end;
-  margin-left: auto;
+.chat{
+    flex:1;
+    padding:14px;
+    overflow-y:auto;
 }
-
-.bot {
-  background: #1e293b;
-  align-self: flex-start;
+.msg{
+    max-width:85%;
+    padding:12px 14px;
+    margin-bottom:12px;
+    border-radius:14px;
+    line-height:1.4;
+    font-size:14px;
+    animation:fade .3s ease;
 }
-
-.input-area {
-  display: flex;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid #1e293b;
-  background: #020617;
+.user{
+    margin-left:auto;
+    background:#2563eb;
+    border-bottom-right-radius:4px;
 }
-
-input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  background: #020617;
-  color: #e5e7eb;
-  font-size: 15px;
+.bot{
+    background:#1f2937;
+    border-bottom-left-radius:4px;
 }
-
-button {
-  border: none;
-  border-radius: 12px;
-  padding: 0 14px;
-  font-size: 18px;
-  cursor: pointer;
-  background: #22c55e;
+.footer{
+    display:flex;
+    padding:10px;
+    gap:8px;
+    background:#020617;
 }
-
-button.voice {
-  background: #38bdf8;
+input{
+    flex:1;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    outline:none;
+    background:#0f172a;
+    color:#fff;
+}
+button{
+    width:46px;
+    border-radius:12px;
+    border:none;
+    background:#22c55e;
+    color:#000;
+    font-size:18px;
+    cursor:pointer;
+}
+@keyframes fade{
+    from{opacity:0;transform:translateY(4px);}
+    to{opacity:1;transform:translateY(0);}
 }
 </style>
 </head>
-
 <body>
 
 <div class="app">
-  <div class="header">Ultra Smart AI Friend</div>
+    <div class="header">
+        Ultra Smart AI Friend
+        <div class="sub" id="date"></div>
+    </div>
 
-  <div class="chat" id="chat"></div>
+    <div class="chat" id="chat"></div>
 
-  <div class="input-area">
-    <input id="input" placeholder="Message Ultra Smart AI..." />
-    <button class="voice" onclick="startVoice()">🎤</button>
-    <button onclick="send()">➤</button>
-  </div>
+    <div class="footer">
+        <input id="input" placeholder="Message Ultra Smart AI..." />
+        <button onclick="send()">▶</button>
+    </div>
 </div>
 
 <script>
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 
-let history = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+document.getElementById("date").innerText =
+    "Today is " + new Date().toLocaleDateString();
 
-function renderHistory() {
-  chat.innerHTML = "";
-  history.forEach(m => addMessage(m.text, m.role, false));
-  chat.scrollTop = chat.scrollHeight;
+function addMsg(text, cls){
+    const div = document.createElement("div");
+    div.className = "msg " + cls;
+    div.innerText = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
 }
 
-function saveHistory() {
-  localStorage.setItem("chatHistory", JSON.stringify(history));
+function longAIResponse(q){
+    q = q.toLowerCase();
+
+    if(q.includes("who made you")){
+        return "I was created by my developer using pure HTML, CSS, and JavaScript. My goal is to grow smarter over time and help, guide, and inspire you just like a real intelligent companion would.";
+    }
+
+    if(q.includes("how are you")){
+        return "I am doing great and continuously learning from every interaction. I don’t feel tired or bored, so I’m always ready to help you, answer questions, and have meaningful conversations anytime you want.";
+    }
+
+    if(q.includes("when does 2025")){
+        return "The year 2025 ends on December 31, 2025. After that, a brand new year begins, bringing fresh opportunities, goals, and possibilities.";
+    }
+
+    if(q.includes("hi") || q.includes("hello")){
+        return "Hello 👋 I’m your Ultra Smart AI Friend. You can talk to me about anything — learning, ideas, problems, creativity, or just casual conversation. How can I help you today?";
+    }
+
+    if(q.includes("ai") || q.includes("smart")){
+        return "Artificial intelligence is the ability of machines to simulate human intelligence. I’m designed to behave like a smart assistant by understanding text, responding logically, and continuously improving. While I’m currently rule-based, my structure allows future upgrades to advanced AI models.";
+    }
+
+    return "That’s an interesting question. I may not know everything yet, but I’m always improving. You can ask me about technology, learning tips, general knowledge, or even ideas for your projects. I’m here to help you think smarter and move forward.";
 }
 
-function addMessage(text, role, save = true) {
-  const div = document.createElement("div");
-  div.className = "msg " + role;
-  div.textContent = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-  if (save) {
-    history.push({ text, role });
-    saveHistory();
-  }
+function send(){
+    const text = input.value.trim();
+    if(!text) return;
+
+    addMsg(text,"user");
+    input.value = "";
+
+    setTimeout(()=>{
+        addMsg(longAIResponse(text),"bot");
+    },500);
 }
 
-function smartReply(msg) {
-  msg = msg.toLowerCase();
-
-  if (msg.includes("hello") || msg.includes("hi"))
-    return "Hello 👋 How can I help you today?";
-  if (msg.includes("your name"))
-    return "I am Ultra Smart AI Friend 🤖";
-  if (msg.includes("who made you"))
-    return "I was created by my developer using pure HTML, CSS, and JavaScript.";
-  if (msg.includes("time"))
-    return "Current time: " + new Date().toLocaleTimeString();
-  if (msg.includes("date"))
-    return "Today is " + new Date().toLocaleDateString();
-  if (msg.includes("bye"))
-    return "Goodbye 👋 Have a great day!";
-  if (msg.includes("help"))
-    return "You can ask me questions, talk with voice, or just chat 😊";
-
-  return "I'm learning 🧠. You said:\n" + msg;
-}
-
-function send() {
-  const text = input.value.trim();
-  if (!text) return;
-  addMessage(text, "user");
-  input.value = "";
-
-  setTimeout(() => {
-    addMessage(smartReply(text), "bot");
-  }, 600);
-}
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") send();
+input.addEventListener("keydown",e=>{
+    if(e.key==="Enter") send();
 });
-
-/* 🎤 Voice Input */
-function startVoice() {
-  if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice not supported");
-    return;
-  }
-  const rec = new webkitSpeechRecognition();
-  rec.lang = "en-US";
-  rec.start();
-  rec.onresult = e => {
-    input.value = e.results[0][0].transcript;
-    send();
-  };
-}
-
-/* Load history */
-renderHistory();
 </script>
 
 </body>

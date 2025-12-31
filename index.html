@@ -1,78 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ultra Smart AI Friend</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Ultra Smart AI Friend</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #020617, #0f172a);
-  color: #e5e7eb;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #020617, #0f172a);
+      color: #e5e7eb;
+    }
 
-header {
-  padding: 15px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  background: #020617;
-}
+    header {
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      background: #020617;
+      border-bottom: 1px solid #1e293b;
+    }
 
-#chat {
-  height: 70vh;
-  overflow-y: auto;
-  padding: 15px;
-}
+    #chat {
+      padding: 15px;
+      height: calc(100vh - 140px);
+      overflow-y: auto;
+    }
 
-.msg {
-  margin: 8px 0;
-  padding: 10px 14px;
-  border-radius: 10px;
-  max-width: 80%;
-}
+    .user {
+      background: #2563eb;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 8px 0;
+      text-align: right;
+      color: #fff;
+    }
 
-.user {
-  background: #2563eb;
-  margin-left: auto;
-  text-align: right;
-}
+    .bot {
+      background: #334155;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
 
-.bot {
-  background: #334155;
-  margin-right: auto;
-}
+    footer {
+      display: flex;
+      padding: 10px;
+      background: #020617;
+      gap: 8px;
+    }
 
-footer {
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  background: #020617;
-}
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
 
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  outline: none;
-}
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-button {
-  padding: 10px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.send { background: #22c55e; }
-.mic { background: #f97316; }
-</style>
+    .send {
+      background: #22c55e;
+      color: #000;
+    }
+  </style>
 </head>
-
 <body>
 
 <header>🤖 Ultra Smart AI Friend</header>
@@ -80,65 +81,56 @@ button {
 <div id="chat"></div>
 
 <footer>
-  <input id="input" placeholder="Ask something..." />
-  <button class="mic" onclick="voice()">🎤</button>
-  <button class="send" onclick="send()">Send</button>
+  <input id="q" placeholder="Ask something..." />
+  <button class="send" onclick="ask()">Send</button>
 </footer>
 
 <script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("input");
+function ask() {
+  const input = document.getElementById("q");
+  const text = input.value.trim();
+  if (!text) return;
 
-function addMsg(text, type) {
-  const div = document.createElement("div");
-  div.className = "msg " + type;
-  div.innerText = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-  if (type === "bot") speak(text);
-}
-
-function send() {
-  const q = input.value.trim();
-  if (!q) return;
-
-  addMsg(q, "user");
+  addMessage(text, "user");
   input.value = "";
 
-  setTimeout(() => {
-    addMsg(reply(q.toLowerCase()), "bot");
-  }, 300);
+  const reply = getAnswer(text.toLowerCase());
+  setTimeout(() => addMessage(reply, "bot"), 300);
 }
 
-function reply(q) {
-  if (q.includes("assalam")) return "Wa Alaikum Assalam 😊";
-  if (q === "hi" || q === "hello") return "Hello! How can I help you?";
-  if (q.includes("how are you")) return "I am fine and always ready to help you.";
-  if (q.includes("name")) return "My name is Ultra Smart AI Friend.";
-  if (q.includes("time")) return "Current time is " + new Date().toLocaleTimeString();
-  if (q.includes("date")) return "Today's date is " + new Date().toLocaleDateString();
-  if (q.includes("who made you")) return "You created me ❤️";
-  return "I am still learning. Please ask simple questions.";
+function addMessage(msg, type) {
+  const chat = document.getElementById("chat");
+  const div = document.createElement("div");
+  div.className = type;
+  div.innerText = msg;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
 }
 
-function speak(text) {
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-US";
-  speechSynthesis.speak(u);
-}
+function getAnswer(q) {
 
-function voice() {
-  if (!("webkitSpeechRecognition" in window)) {
-    alert("Voice not supported");
-    return;
-  }
-  const r = new webkitSpeechRecognition();
-  r.lang = "en-US";
-  r.onresult = e => {
-    input.value = e.results[0][0].transcript;
-    send();
-  };
-  r.start();
+  if (q.includes("hello") || q.includes("hi"))
+    return "Hello! I am your Ultra Smart AI Friend.";
+
+  if (q.includes("how are you"))
+    return "I am fine and always ready to help you.";
+
+  if (q.includes("your name"))
+    return "My name is Ultra Smart AI Friend.";
+
+  if (q.includes("time"))
+    return "Current time: " + new Date().toLocaleTimeString();
+
+  if (q.includes("date"))
+    return "Today's date: " + new Date().toLocaleDateString();
+
+  if (q.includes("tic tac toe"))
+    return "Tic Tac Toe is a 2-player game. Players take turns marking X and O on a 3×3 grid. The first player to get 3 in a row (horizontal, vertical, or diagonal) wins.";
+
+  if (q.includes("help"))
+    return "You can ask me about time, date, games, greetings, or basic questions.";
+
+  return "I do not understand that yet, but I am learning every day.";
 }
 </script>
 

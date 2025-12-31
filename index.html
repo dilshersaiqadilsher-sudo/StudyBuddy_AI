@@ -1,20 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ultra Smart AI Friend</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  height:100vh;
-  font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(135deg,#020617,#0f172a);
-  color:#e5e7eb;
-  display:flex;
-  flex-direction:column;
-}
-header{
-  padding:15px;
-  text
+  <meta charset="UTF-8" />
+  <title>Ultra Smart AI Friend</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #020617, #020024);
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .app {
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    #chat {
+      height: 300px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      margin-bottom: 8px;
+    }
+
+    .user {
+      color: #38bdf8;
+    }
+
+    .bot {
+      color: #22c55e;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <h1>Ultra Smart AI Friend</h1>
+
+    <div id="chat">
+      <div class="msg bot">AI: Hello! I am working ✅</div>
+    </div>
+
+    <input
+      type="text"
+      id="input"
+      placeholder="Type your message and press Enter..."
+    />
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const input = document.getElementById("input");
+    const chat = document.getElementById("chat");
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && input.value.trim() !== "") {
+        const userMsg = document.createElement("div");
+        userMsg.className = "msg user";
+        userMsg.textContent = "You: " + input.value;
+        chat.appendChild(userMsg);
+
+        const botMsg = document.createElement("div");
+        botMsg.className = "msg bot";
+        botMsg.textContent = "AI: I received → " + input.value;
+        chat.appendChild(botMsg);
+
+        input.value = "";
+        chat.scrollTop = chat.scrollHeight;
+      }
+    });
+  </script>
+
+</body>
+</html>

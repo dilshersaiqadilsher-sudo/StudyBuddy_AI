@@ -1,263 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Ultra Smart AI Friend — World Class</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ultra Smart AI Friend ⚡ Ultimate</title>
 
 <style>
 :root{
-  --bg:#020617;
-  --panel:#050b2a;
-  --bot:#0f172a;
-  --user:#2563eb;
-  --accent:#38bdf8;
-  --text:#e5e7eb;
-  --muted:#94a3b8;
-  --success:#22c55e;
-  --danger:#ef4444;
+  --bg:#050b1e;
+  --card:#0b132b;
+  --text:#ffffff;
+  --bubble:#2563eb;
+  --bot:#111827;
 }
-.light{
-  --bg:#f8fafc;
-  --panel:#ffffff;
+body.light{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --text:#0b132b;
+  --bubble:#3b82f6;
   --bot:#e5e7eb;
-  --user:#2563eb;
-  --accent:#0284c7;
-  --text:#020617;
-  --muted:#475569;
 }
-*{box-sizing:border-box;font-family:Segoe UI,system-ui}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
 body{
   margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top,var(--panel),var(--bg));
+  background:var(--bg);
+  color:var(--text);
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+  height:100vh;
 }
 .app{
-  width:460px;
-  max-width:100%;
-  height:95vh;
-  background:linear-gradient(180deg,var(--panel),var(--bg));
-  border-radius:22px;
-  box-shadow:0 40px 120px rgba(0,0,0,.4);
+  width:380px;
+  max-height:90vh;
+  background:var(--card);
+  border-radius:18px;
   display:flex;
   flex-direction:column;
   overflow:hidden;
 }
 .header{
-  padding:14px;
-  background:linear-gradient(90deg,var(--user),var(--accent));
-  color:white;
-  text-align:center;
-  position:relative;
+  background:linear-gradient(90deg,#2563eb,#38bdf8);
+  color:#fff;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.header h1{margin:0;font-size:18px}
-.header p{margin:2px 0 0;font-size:12px;opacity:.9}
-.theme{
-  position:absolute;
-  right:10px;
-  top:10px;
+.header h2{
+  margin:0;
+  font-size:16px;
+}
+.header small{
+  display:block;
+  opacity:.9;
+}
+#themeToggle{
+  background:rgba(255,255,255,.2);
   border:none;
-  border-radius:10px;
-  padding:6px 10px;
+  border-radius:50%;
+  width:34px;
+  height:34px;
   cursor:pointer;
-  background:#00000030;
-  color:white;
-  font-size:12px;
+  color:#fff;
+  font-size:16px;
 }
 .chat{
   flex:1;
-  padding:16px;
+  padding:12px;
   overflow-y:auto;
 }
 .msg{
-  max-width:85%;
-  padding:12px 15px;
-  border-radius:16px;
-  margin-bottom:12px;
+  margin-bottom:10px;
+  max-width:80%;
+  padding:10px 12px;
+  border-radius:14px;
   font-size:14px;
-  line-height:1.45;
-  animation:pop .2s ease;
-  word-wrap:break-word;
 }
 .user{
-  background:var(--user);
-  color:white;
+  background:var(--bubble);
+  color:#fff;
   margin-left:auto;
-  border-bottom-right-radius:6px;
 }
 .bot{
   background:var(--bot);
   color:var(--text);
-  border-bottom-left-radius:6px;
 }
-.typing{
-  font-style:italic;
-  color:var(--muted);
-}
-.tools{
+.input-area{
   display:flex;
-  gap:6px;
-  padding:0 12px 12px;
+  padding:10px;
+  gap:8px;
 }
-.tools button{
+.input-area input{
   flex:1;
-  padding:8px;
-  border-radius:12px;
-  border:none;
-  background:#111827;
-  color:#e5e7eb;
-  cursor:pointer;
-  font-size:12px;
-}
-.light .tools button{background:#e5e7eb;color:#020617}
-.tools button.danger{background:#7f1d1d}
-.input{
-  padding:12px;
-  display:flex;
-  gap:10px;
-}
-.input input{
-  flex:1;
-  padding:12px 14px;
-  border-radius:14px;
+  padding:10px;
+  border-radius:20px;
   border:none;
   outline:none;
-  background:var(--panel);
-  color:var(--text);
-  box-shadow:inset 0 0 0 1px #1f2937;
 }
-.light .input input{box-shadow:inset 0 0 0 1px #cbd5f5}
-.input button{
-  width:50px;
+.input-area button{
+  background:#22c55e;
   border:none;
-  border-radius:14px;
-  background:var(--success);
-  font-size:18px;
+  color:#fff;
+  border-radius:50%;
+  width:42px;
+  height:42px;
   cursor:pointer;
-}
-@keyframes pop{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:none}
+  font-size:18px;
 }
 </style>
 </head>
 
 <body>
-<div class="app" id="app">
+<div class="app">
   <div class="header">
-    <h1>Ultra Smart AI Friend ⚡ World Class</h1>
-    <p id="date"></p>
-    <button class="theme" onclick="toggleTheme()">🌙 / ☀️</button>
+    <div>
+      <h2>Ultra Smart AI Friend ⚡ Ultimate</h2>
+      <small id="date"></small>
+    </div>
+    <button id="themeToggle">🌙</button>
   </div>
 
   <div class="chat" id="chat"></div>
 
-  <div class="tools">
-    <button onclick="showHelp()">Help</button>
-    <button onclick="exportChat()">Export</button>
-    <button class="danger" onclick="clearAll()">Clear</button>
-  </div>
-
-  <div class="input">
-    <input id="input" placeholder="Ask anything, logic, math, ideas…" />
+  <div class="input-area">
+    <input id="input" placeholder="Ask anything or type a calculation..." />
     <button onclick="send()">▶</button>
   </div>
 </div>
 
 <script>
-const chat=document.getElementById("chat");
-const input=document.getElementById("input");
-const app=document.getElementById("app");
-document.getElementById("date").textContent=new Date().toDateString();
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+const toggle = document.getElementById("themeToggle");
 
-let memory=JSON.parse(localStorage.getItem("ultra_memory_v3")||"[]");
-let theme=localStorage.getItem("theme")||"dark";
+document.getElementById("date").innerText =
+  new Date().toDateString();
 
-if(theme==="light") app.classList.add("light");
-
-function toggleTheme(){
-  app.classList.toggle("light");
-  theme=app.classList.contains("light")?"light":"dark";
-  localStorage.setItem("theme",theme);
-}
-
-function saveMemory(){
-  localStorage.setItem("ultra_memory_v3",JSON.stringify(memory));
-}
-
-function add(text,type){
-  const d=document.createElement("div");
-  d.className="msg "+type;
-  d.textContent=text;
-  chat.appendChild(d);
-  chat.scrollTop=chat.scrollHeight;
-}
-
-function typing(){
-  const t=document.createElement("div");
-  t.className="msg bot typing";
-  t.textContent="Thinking…";
-  chat.appendChild(t);
-  chat.scrollTop=chat.scrollHeight;
-  return t;
-}
-
-function isMath(q){
-  return /^[0-9+\-*/().\s^%]+$/.test(q);
-}
-function solveMath(q){
-  try{return Function("return "+q.replace(/\^/g,"**"))();}catch{return null;}
-}
-
-function smartReply(q){
-  const l=q.toLowerCase();
-  if(l==="clear chat"){memory=[];saveMemory();chat.innerHTML="";return"Chat cleared.";}
-  if(l==="bye") return"Goodbye 👋";
-  if(l==="hi"||l==="hello") return"Hello 👋 I’m ready.";
-  if(isMath(q)){const r=solveMath(q);if(r!==null)return"🧮 Answer: "+r;}
-  return"I understand. Ask math, logic, plans, or ideas.";
+function addMsg(text, cls){
+  const div = document.createElement("div");
+  div.className = "msg " + cls;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
 }
 
 function send(){
-  const q=input.value.trim();
-  if(!q) return;
-  add(q,"user");
-  input.value="";
-  const t=typing();
-  setTimeout(()=>{
-    t.remove();
-    const a=smartReply(q);
-    add(a,"bot");
-    memory.push({q,a});
-    saveMemory();
-  },300);
-}
+  const text = input.value.trim();
+  if(!text) return;
+  const cmd = text.toLowerCase();
+  input.value = "";
 
-input.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
-
-function clearAll(){
-  if(confirm("Clear all chat memory?")){
-    memory=[];saveMemory();chat.innerHTML="";
-    add("All memory cleared.","bot");
+  if(cmd==="clear"||cmd==="clear chat"||cmd==="delete chat"){
+    chat.innerHTML="";
+    return;
   }
-}
-function exportChat(){
-  const text=memory.map(m=>"You: "+m.q+"\nAI: "+m.a).join("\n\n");
-  const b=new Blob([text],{type:"text/plain"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(b);
-  a.download="ultra-smart-ai-chat.txt";
-  a.click();
-}
-function showHelp(){
-  add("Commands:\n• Math\n• clear chat\n• ideas / logic\n• offline AI","bot");
+  if(cmd==="light mode"){
+    document.body.classList.add("light");
+    localStorage.setItem("theme","light");
+    return;
+  }
+  if(cmd==="dark mode"){
+    document.body.classList.remove("light");
+    localStorage.setItem("theme","dark");
+    return;
+  }
+
+  addMsg(text,"user");
+  process(text);
 }
 
-add("🚀 Ultra Smart AI Friend loaded.","bot");
-memory.forEach(m=>{add(m.q,"user");add(m.a,"bot");});
+function process(text){
+  if(/^[0-9+\-*/().\s]+$/.test(text)){
+    try{
+      addMsg("🧮 Answer: " + eval(text),"bot");
+    }catch{
+      addMsg("❌ Invalid calculation","bot");
+    }
+    return;
+  }
+
+  if(text.toLowerCase()==="hi"){
+    addMsg("Hello 👋 I’m Ultra Smart AI Friend.","bot");
+    return;
+  }
+  if(text.toLowerCase()==="bye"){
+    addMsg("Goodbye 👋 Your chat is saved.","bot");
+    return;
+  }
+
+  addMsg("Ask me anything — calculations, logic, or help.","bot");
+}
+
+toggle.onclick=()=>{
+  document.body.classList.toggle("light");
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light")?"light":"dark"
+  );
+};
+
+window.onload=()=>{
+  if(localStorage.getItem("theme")==="light"){
+    document.body.classList.add("light");
+  }
+  addMsg("Hello 👋 I’m Ultra Smart AI Friend.","bot");
+};
+
+input.addEventListener("keydown",e=>{
+  if(e.key==="Enter") send();
+});
 </script>
 </body>
 </html>

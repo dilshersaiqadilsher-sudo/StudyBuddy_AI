@@ -5,6 +5,10 @@
 <title>Ultra Smart AI Friend — Ultimate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#2563eb">
+
 <style>
 :root{
   --bg:#020617;
@@ -56,7 +60,6 @@ body{
   margin-bottom:12px;
   font-size:14px;
   line-height:1.45;
-  animation:pop .25s ease;
 }
 .user{
   background:var(--user);
@@ -97,11 +100,6 @@ body{
   font-size:18px;
   cursor:pointer;
 }
-.input button:hover{filter:brightness(1.1)}
-@keyframes pop{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:none}
-}
 </style>
 </head>
 
@@ -121,6 +119,12 @@ body{
 </div>
 
 <script>
+/* ===== PWA SERVICE WORKER ===== */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
+
+/* ===== CHAT LOGIC ===== */
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 document.getElementById("date").textContent = new Date().toDateString();
@@ -169,27 +173,21 @@ function smartReply(q){
   }
 
   if(l.includes("hi")||l.includes("hello"))
-    return "Hello 👋 I’m Ultra Smart AI Friend. I can chat, calculate, and remember.";
+    return "Hello 👋 I’m Ultra Smart AI Friend.";
 
   if(l.includes("bye"))
     return "Goodbye 👋 Your chat is saved.";
 
   if(l.includes("who made you"))
-    return "I was built using pure HTML, CSS, and JavaScript and hosted on GitHub Pages.";
-
-  if(l.includes("game"))
-    return "🎮 I can help design games, rules, logic, or ideas.";
-
-  if(l.includes("memory"))
-    return "🧠 I remember this chat using your browser storage.";
+    return "I’m built with HTML, CSS & JavaScript and run fully offline.";
 
   if(l.includes("clear memory")){
     memory=[];
     saveMemory();
-    return "Memory cleared successfully.";
+    return "🧠 Memory cleared.";
   }
 
-  return "I understand. Ask me anything — calculations, help, ideas, or logic.";
+  return "Ask me anything — calculations, logic, or help.";
 }
 
 function send(){
@@ -205,14 +203,14 @@ function send(){
     add(a,"bot");
     memory.push({q,a});
     saveMemory();
-  },400);
+  },300);
 }
 
 input.addEventListener("keydown",e=>{
   if(e.key==="Enter") send();
 });
 
-add("Hello 👋 I’m Ultra Smart AI Friend Ultimate. I work offline, calculate instantly, and remember chats.","bot");
+add("Hello 👋 I’m Ultra Smart AI Friend Ultimate.","bot");
 
 memory.forEach(m=>{
   add(m.q,"user");

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ultra Smart AI Friend ⚡ Ultimate</title>
 
 <style>
@@ -10,35 +10,41 @@
   --bg:#050b1e;
   --card:#0b132b;
   --text:#ffffff;
-  --bubble:#2563eb;
+  --user:#2563eb;
   --bot:#111827;
+  --accent:#22c55e;
 }
-body.light{
+.light{
   --bg:#f4f6fb;
   --card:#ffffff;
   --text:#0b132b;
-  --bubble:#3b82f6;
+  --user:#3b82f6;
   --bot:#e5e7eb;
+  --accent:#16a34a;
 }
+
 *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
 }
+
 .app{
-  width:380px;
-  max-height:90vh;
+  width:390px;
+  height:92vh;
   background:var(--card);
   border-radius:18px;
   display:flex;
   flex-direction:column;
   overflow:hidden;
 }
+
 .header{
   background:linear-gradient(90deg,#2563eb,#38bdf8);
   color:#fff;
@@ -47,66 +53,75 @@ body{
   justify-content:space-between;
   align-items:center;
 }
-.header h2{
-  margin:0;
-  font-size:16px;
+
+.header h2{margin:0;font-size:16px}
+.header small{font-size:11px;opacity:.9}
+
+.header .buttons{
+  display:flex;
+  gap:8px;
 }
-.header small{
-  display:block;
-  opacity:.9;
-}
-#themeToggle{
-  background:rgba(255,255,255,.2);
+
+.icon-btn{
+  background:rgba(255,255,255,.25);
   border:none;
   border-radius:50%;
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
+  font-size:18px;
   cursor:pointer;
-  color:#fff;
-  font-size:16px;
 }
+
 .chat{
   flex:1;
   padding:12px;
   overflow-y:auto;
 }
+
 .msg{
   margin-bottom:10px;
-  max-width:80%;
   padding:10px 12px;
   border-radius:14px;
+  max-width:82%;
   font-size:14px;
+  line-height:1.4;
 }
+
 .user{
-  background:var(--bubble);
+  background:var(--user);
   color:#fff;
   margin-left:auto;
 }
+
 .bot{
   background:var(--bot);
   color:var(--text);
 }
+
 .input-area{
   display:flex;
-  padding:10px;
   gap:8px;
+  padding:10px;
 }
+
 .input-area input{
   flex:1;
-  padding:10px;
+  padding:10px 12px;
   border-radius:20px;
   border:none;
   outline:none;
+  font-size:14px;
 }
+
 .input-area button{
-  background:#22c55e;
-  border:none;
-  color:#fff;
-  border-radius:50%;
   width:42px;
   height:42px;
-  cursor:pointer;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
   font-size:18px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -118,13 +133,16 @@ body{
       <h2>Ultra Smart AI Friend ⚡ Ultimate</h2>
       <small id="date"></small>
     </div>
-    <button id="themeToggle">🌙</button>
+    <div class="buttons">
+      <button class="icon-btn" id="themeBtn">🌙</button>
+      <button class="icon-btn" id="micBtn">🎤</button>
+    </div>
   </div>
 
   <div class="chat" id="chat"></div>
 
   <div class="input-area">
-    <input id="input" placeholder="Ask anything or type a calculation..." />
+    <input id="input" placeholder="Ask anything or type a calculation...">
     <button onclick="send()">▶</button>
   </div>
 </div>
@@ -132,84 +150,105 @@ body{
 <script>
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
-const toggle = document.getElementById("themeToggle");
+const themeBtn = document.getElementById("themeBtn");
+const micBtn = document.getElementById("micBtn");
 
-document.getElementById("date").innerText =
-  new Date().toDateString();
+document.getElementById("date").innerText = new Date().toDateString();
 
-function addMsg(text, cls){
-  const div = document.createElement("div");
-  div.className = "msg " + cls;
-  div.textContent = text;
+let memory = JSON.parse(localStorage.getItem("memory") || "[]");
+
+function saveMemory(){
+  localStorage.setItem("memory",JSON.stringify(memory));
+}
+
+function addMsg(text,type){
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.textContent=text;
   chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
+  chat.scrollTop=chat.scrollHeight;
 }
 
 function send(){
-  const text = input.value.trim();
+  const text=input.value.trim();
   if(!text) return;
-  const cmd = text.toLowerCase();
-  input.value = "";
+  input.value="";
+  addMsg(text,"user");
+  memory.push({role:"user",text});
+  handle(text.toLowerCase(),text);
+}
+
+function handle(cmd,raw){
 
   if(cmd==="clear"||cmd==="clear chat"||cmd==="delete chat"){
     chat.innerHTML="";
-    return;
-  }
-  if(cmd==="light mode"){
-    document.body.classList.add("light");
-    localStorage.setItem("theme","light");
-    return;
-  }
-  if(cmd==="dark mode"){
-    document.body.classList.remove("light");
-    localStorage.setItem("theme","dark");
+    memory=[];
+    saveMemory();
     return;
   }
 
-  addMsg(text,"user");
-  process(text);
-}
+  if(cmd==="light mode"){setTheme("light");addMsg("Light mode enabled ☀️","bot");return;}
+  if(cmd==="dark mode"){setTheme("dark");addMsg("Dark mode enabled 🌙","bot");return;}
 
-function process(text){
-  if(/^[0-9+\-*/().\s]+$/.test(text)){
+  if(/^[0-9+\-*/().\s]+$/.test(raw)){
     try{
-      addMsg("🧮 Answer: " + eval(text),"bot");
+      addMsg("🧮 Answer: "+Function("return "+raw)(),"bot");
     }catch{
       addMsg("❌ Invalid calculation","bot");
     }
     return;
   }
 
-  if(text.toLowerCase()==="hi"){
-    addMsg("Hello 👋 I’m Ultra Smart AI Friend.","bot");
-    return;
-  }
-  if(text.toLowerCase()==="bye"){
-    addMsg("Goodbye 👋 Your chat is saved.","bot");
+  if(cmd==="hi"){addMsg("Hello 👋 I’m Ultra Smart AI Friend.","bot");return;}
+  if(cmd==="bye"){addMsg("Goodbye 👋 Your chat is saved.","bot");return;}
+
+  if(cmd.includes("photosynthesis")){
+    addMsg("Photosynthesis is the process by which green plants use sunlight, carbon dioxide, and water to produce glucose and oxygen.","bot");
     return;
   }
 
-  addMsg("Ask me anything — calculations, logic, or help.","bot");
+  addMsg("I’m learning continuously. Ask me calculations, science, logic, or general knowledge.","bot");
+  memory.push({role:"bot",text:"generic"});
+  saveMemory();
 }
 
-toggle.onclick=()=>{
-  document.body.classList.toggle("light");
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("light")?"light":"dark"
-  );
+function setTheme(mode){
+  if(mode==="light"){
+    document.body.classList.add("light");
+    themeBtn.textContent="☀️";
+    localStorage.setItem("theme","light");
+  }else{
+    document.body.classList.remove("light");
+    themeBtn.textContent="🌙";
+    localStorage.setItem("theme","dark");
+  }
+}
+
+themeBtn.onclick=()=>{
+  setTheme(document.body.classList.contains("light")?"dark":"light");
 };
 
 window.onload=()=>{
-  if(localStorage.getItem("theme")==="light"){
-    document.body.classList.add("light");
-  }
+  setTheme(localStorage.getItem("theme")||"dark");
   addMsg("Hello 👋 I’m Ultra Smart AI Friend.","bot");
 };
 
 input.addEventListener("keydown",e=>{
   if(e.key==="Enter") send();
 });
+
+/* Voice input */
+if("webkitSpeechRecognition" in window){
+  const rec=new webkitSpeechRecognition();
+  rec.lang="en-US";
+  rec.onresult=e=>{
+    input.value=e.results[0][0].transcript;
+    send();
+  };
+  micBtn.onclick=()=>rec.start();
+}else{
+  micBtn.style.display="none";
+}
 </script>
 </body>
 </html>

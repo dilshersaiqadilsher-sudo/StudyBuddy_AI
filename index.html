@@ -106,11 +106,6 @@ button:disabled{
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-const WORKER_URL = "https://YOUR-WORKER-URL.workers.dev";
-const TIMEOUT_MS = 12000;
-/* ========================================= */
-
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("send");
@@ -118,33 +113,33 @@ const sendBtn = document.getElementById("send");
 document.getElementById("date").textContent =
   new Date().toDateString();
 
-/* ---------- MEMORY ---------- */
-let memory = JSON.parse(localStorage.getItem("memory") || "[]");
-
-function saveMemory(role, text){
-  memory.push({ role, text });
-  if(memory.length > 10) memory.shift();
-  localStorage.setItem("memory", JSON.stringify(memory));
-}
-
-/* ---------- UI ---------- */
 function addMsg(text, role){
   const d = document.createElement("div");
   d.className = "msg " + role;
   d.textContent = text;
   chat.appendChild(d);
   chat.scrollTop = chat.scrollHeight;
-  saveMemory(role, text);
 }
 
-function typeEffect(el, text){
-  el.textContent = "";
-  let i = 0;
-  const t = setInterval(()=>{
-    el.textContent += text[i++];
-    chat.scrollTop = chat.scrollHeight;
-    if(i >= text.length) clearInterval(t);
-  }, 12);
+function simpleAI(text){
+  text = text.toLowerCase();
+
+  if(text.includes("hi") || text.includes("hello"))
+    return "Hello 😊 How can I help you today?";
+
+  if(text.includes("science"))
+    return "Science is the study of nature, experiments, and discoveries.";
+
+  if(text.includes("geography"))
+    return "Geography studies Earth, countries, rivers, mountains, and climate.";
+
+  if(text.includes("history"))
+    return "History tells us about past people and events.";
+
+  if(text.includes("english"))
+    return "English is a language used for speaking, reading, and writing.";
+
+  return "Good question 👍 I am learning more every day.";
 }
 
 addMsg(
@@ -152,32 +147,6 @@ addMsg(
   "bot"
 );
 
-/* ---------- AI ---------- */
-async function askAI(prompt){
-  const controller = new AbortController();
-  const timer = setTimeout(()=>controller.abort(), TIMEOUT_MS);
-
-  const res = await fetch(WORKER_URL,{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      prompt,
-      memory
-    }),
-    signal: controller.signal
-  });
-
-  clearTimeout(timer);
-
-  if(!res.ok) throw new Error("Worker error");
-
-  const data = await res.json();
-  if(!data.reply) throw new Error("Invalid reply");
-
-  return data.reply;
-}
-
-/* ---------- LOGIC ---------- */
 async function send(){
   const text = input.value.trim();
   if(!text) return;
@@ -190,24 +159,13 @@ async function send(){
   thinking.className = "msg bot";
   thinking.textContent = "Thinking…";
   chat.appendChild(thinking);
-  chat.scrollTop = chat.scrollHeight;
 
-  try{
-    const reply = await askAI(text);
+  setTimeout(()=>{
     thinking.remove();
-
-    const botDiv = document.createElement("div");
-    botDiv.className = "msg bot";
-    chat.appendChild(botDiv);
-    typeEffect(botDiv, reply);
-    saveMemory("bot", reply);
-
-  }catch(e){
-    thinking.remove();
-    addMsg("AI is busy or took too long. Please try again.","bot");
-  }finally{
+    const reply = simpleAI(text);
+    addMsg(reply,"bot");
     sendBtn.disabled = false;
-  }
+  }, 500);
 }
 
 sendBtn.onclick = send;

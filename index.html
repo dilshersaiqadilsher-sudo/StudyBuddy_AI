@@ -2,32 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ultra Smart AI Friend ⚡ Ultimate</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra Smart AI Friend ⚡ Ultimate</title>
 
 <style>
 :root{
-  --bg:#050b1a;
-  --card:#0b1225;
+  --bg:#020617;
+  --card:#0f172a;
   --user:#2563eb;
   --bot:#1e293b;
   --text:#e5e7eb;
+  --accent:#22c55e;
 }
 .light{
-  --bg:#f5f7fb;
+  --bg:#f1f5f9;
   --card:#ffffff;
   --user:#2563eb;
   --bot:#e5e7eb;
-  --text:#000;
+  --text:#020617;
 }
 *{box-sizing:border-box;font-family:system-ui}
 body{
   margin:0;
+  min-height:100vh;
   background:var(--bg);
   display:flex;
-  justify-content:center;
   align-items:center;
-  height:100vh;
+  justify-content:center;
   color:var(--text);
 }
 .app{
@@ -40,172 +41,195 @@ body{
   overflow:hidden;
 }
 .header{
-  background:linear-gradient(90deg,#2563eb,#38bdf8);
-  color:#fff;
-  padding:12px;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);
+  color:white;
+  padding:10px;
   text-align:center;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:6px;
+}
+.topbar button{
+  border:none;
+  border-radius:8px;
+  padding:6px 8px;
+  font-size:12px;
+  cursor:pointer;
 }
 .chat{
   flex:1;
-  padding:12px;
+  padding:10px;
   overflow-y:auto;
 }
 .msg{
+  padding:10px;
+  border-radius:12px;
+  margin-bottom:8px;
   max-width:85%;
-  padding:10px 14px;
-  border-radius:14px;
-  margin-bottom:10px;
-  font-size:14px;
   white-space:pre-wrap;
 }
-.user{background:var(--user);color:#fff;margin-left:auto}
+.user{background:var(--user);color:white;margin-left:auto}
 .bot{background:var(--bot)}
-.controls{
+.inputbar{
   display:flex;
   gap:6px;
-  padding:6px;
-  justify-content:center;
-}
-.controls button{
-  font-size:11px;
-  padding:4px 6px;
-}
-.inputBar{
-  display:flex;
-  gap:6px;
-  padding:10px;
+  padding:8px;
 }
 input{
   flex:1;
   padding:10px;
-  border-radius:12px;
+  border-radius:10px;
   border:none;
 }
-button{
+button.send{
+  background:var(--accent);
   border:none;
-  border-radius:12px;
-  padding:0 12px;
-  background:#22c55e;
-  color:#fff;
-  cursor:pointer;
+  border-radius:10px;
+  padding:0 14px;
+  color:white;
+}
+.hidden{display:none}
+.modebar{
+  display:flex;
+  gap:4px;
+  padding:6px;
+}
+.modebar button{
+  flex:1;
+  border:none;
+  border-radius:8px;
+  font-size:12px;
+  padding:6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app" id="app">
+<!-- LOGIN -->
+<div class="app" id="loginBox">
+  <div class="header">Welcome 👋</div>
+  <div style="padding:20px;text-align:center">
+    <p>Enter your name</p>
+    <input id="nameInput" placeholder="Your name">
+    <br><br>
+    <button onclick="login()" class="send">Start</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app hidden" id="chatBox">
   <div class="header">
-    <b>Ultra Smart AI Friend ⚡ Ultimate</b><br>
-    <small id="date"></small>
+    <span id="userName"></span>
+  </div>
+
+  <div class="topbar">
+    <button onclick="toggleTheme()">🎨 Theme</button>
+    <button onclick="exportChat()">📤 Export</button>
+    <button onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <div class="modebar">
+    <button onclick="setMode('chat')">💬 Chat</button>
+    <button onclick="setMode('math')">🧮 Math</button>
+    <button onclick="setMode('study')">📘 Study</button>
   </div>
 
   <div class="chat" id="chat"></div>
 
-  <div class="controls">
-    <button onclick="toggleTheme()">THEME</button>
-    <button onclick="exportChat()">EXPORT</button>
-    <button onclick="login()">LOGIN</button>
-  </div>
-
-  <div class="inputBar">
-    <input id="input" placeholder="Math, Science, English..." />
-    <button onclick="send()">▶</button>
+  <div class="inputbar">
+    <input id="input" placeholder="Ask something…">
+    <button class="send" onclick="send()">▶</button>
   </div>
 </div>
 
 <script>
-/* ================= BASIC ================= */
+let mode="chat";
+let messages=[];
+
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
-document.getElementById("date").textContent=new Date().toDateString();
 
-/* ================= LOGIN ================= */
-let user=localStorage.getItem("user");
+/* LOGIN */
 function login(){
-  const name=prompt("Enter username");
-  if(name){
-    user=name;
-    localStorage.setItem("user",name);
-    addMsg("Logged in as "+name,"bot");
-  }
+  const n=document.getElementById("nameInput").value.trim();
+  if(!n) return alert("Enter name");
+  localStorage.setItem("user",n);
+  start();
 }
-
-/* ================= THEME ================= */
-function toggleTheme(){
-  document.body.classList.toggle("light");
+function logout(){
+  localStorage.clear();
+  location.reload();
 }
+function start(){
+  const n=localStorage.getItem("user");
+  if(!n) return;
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("chatBox").classList.remove("hidden");
+  document.getElementById("userName").innerText="👤 "+n;
+  addMsg("Hello "+n+"! Mode: "+mode.toUpperCase(),"bot");
+}
+if(localStorage.getItem("user")) start();
 
-/* ================= CHAT ================= */
-function addMsg(text,role){
+/* UI */
+function addMsg(t,r){
   const d=document.createElement("div");
-  d.className="msg "+role;
-  d.textContent=text;
+  d.className="msg "+r;
+  d.textContent=t;
   chat.appendChild(d);
   chat.scrollTop=chat.scrollHeight;
+  messages.push(r.toUpperCase()+": "+t);
 }
 
-/* ================= EXPORT ================= */
+/* MODE */
+function setMode(m){
+  mode=m;
+  addMsg("Mode changed to "+m.toUpperCase(),"bot");
+}
+
+/* BRAIN */
+function solveMath(q){
+  try{
+    if(/^[0-9+\-*/(). %]+$/.test(q)) return eval(q);
+  }catch{}
+  return null;
+}
+function brain(q){
+  if(mode==="math"){
+    const r=solveMath(q);
+    return r!==null ? "Answer: "+r : "Invalid math";
+  }
+  if(mode==="study"){
+    if(q.includes("science")) return "Science studies nature and experiments.";
+    if(q.includes("history")) return "History studies past events.";
+    if(q.includes("geography")) return "Geography studies Earth and maps.";
+    if(q.includes("english")) return "English is a global language.";
+    return "Ask Science, History, Geography, or English.";
+  }
+  return "You said: "+q;
+}
+
+/* SEND */
+function send(){
+  const t=input.value.trim();
+  if(!t) return;
+  addMsg(t,"user");
+  input.value="";
+  setTimeout(()=>addMsg(brain(t.toLowerCase()),"bot"),300);
+}
+input.addEventListener("keydown",e=>e.key==="Enter"&&send());
+
+/* EXTRA */
+function toggleTheme(){document.body.classList.toggle("light")}
 function exportChat(){
-  let txt=[...document.querySelectorAll(".msg")]
-    .map(m=>m.textContent).join("\n\n");
-  const blob=new Blob([txt],{type:"text/plain"});
+  const b=new Blob([messages.join("\n")],{type:"text/plain"});
   const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
+  a.href=URL.createObjectURL(b);
   a.download="chat.txt";
   a.click();
 }
-
-/* ================= MATH FIX (IMPORTANT) ================= */
-function isMath(text){
-  return /^[0-9+\-*/().^%= ]+$/.test(text);
-}
-
-function solveMath(text){
-  text=text.replace("=","");
-  text=text.replace(/\^/g,"**");
-  try{
-    const result=Function(`return (${text})`)();
-    return `🧮 ${text} = ${result}`;
-  }catch{
-    return "❌ Invalid math";
-  }
-}
-
-/* ================= OFFLINE AI ================= */
-const offline={
-  hi:"Hello 👋 How can I help?",
-  science:"Science studies nature and experiments.",
-  history:"History studies past events.",
-  english:"English is a global language."
-};
-
-/* ================= SEND ================= */
-function send(){
-  const text=input.value.trim();
-  if(!text) return;
-  addMsg(text,"user");
-  input.value="";
-
-  /* MATH (FIXED) */
-  if(isMath(text)){
-    addMsg(solveMath(text),"bot");
-    return;
-  }
-
-  /* OFFLINE AI */
-  const key=text.toLowerCase();
-  if(offline[key]){
-    addMsg(offline[key],"bot");
-    return;
-  }
-
-  /* MULTI-AI PLACEHOLDER */
-  addMsg("🤖 Online AI not connected yet.","bot");
-}
-
-/* INIT */
-addMsg("Hello. I can solve unlimited math correctly now.","bot");
 </script>
 
 </body>

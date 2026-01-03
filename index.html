@@ -35,12 +35,12 @@ body{
   display:flex;
   flex-direction:column;
 }
-.top, .mode-bar{
+.top,.mode-bar{
   padding:8px;
   display:flex;
   gap:6px;
 }
-.top button, .mode-bar button{
+.top button,.mode-bar button{
   flex:1;
   padding:8px;
   border:none;
@@ -127,7 +127,7 @@ function add(text,cls){
 
 function setMode(m){
   mode=m;
-  add("Mode: "+m.toUpperCase(),"bot");
+  add("Mode switched to "+m.toUpperCase(),"bot");
 }
 
 function send(){
@@ -139,14 +139,14 @@ function send(){
 
   if(mode==="math") solveMath(t);
   else if(mode==="study") study(t);
-  else chatMode(t);
+  else chatAI(t);
 }
 
-/* ===== MATH (UNCHANGED – WORKING) ===== */
+/* ================= MATH ================= */
 function solveMath(q){
   try{
     if(!/^[0-9+\-*/().\s]+$/.test(q)){
-      add("Invalid math expression.","bot");
+      add("Please enter a valid math expression.","bot");
       return;
     }
     add("Answer: "+Function("return "+q)(),"bot");
@@ -155,44 +155,62 @@ function solveMath(q){
   }
 }
 
-/* ===== CHAT ===== */
-function chatMode(q){
+/* ================= SMART CHAT ================= */
+function chatAI(q){
   q=q.toLowerCase();
-  if(q.includes("hi")) add("Hello! 😊","bot");
-  else if(q.includes("bye")) add("Goodbye! 👋","bot");
-  else add("I am here to chat.","bot");
+
+  if(q.includes("hi")||q.includes("hello"))
+    add("Hello! 😊 How can I help you today?","bot");
+
+  else if(q.includes("how are you"))
+    add("I am doing great! Thanks for asking 😊 What would you like to talk about?","bot");
+
+  else if(q.includes("who are you"))
+    add("I am your Ultra Smart AI Friend, designed to help, teach, and chat with you.","bot");
+
+  else if(q.includes("what can you do"))
+    add("I can chat, solve math, explain science, history, geography, English, and more!","bot");
+
+  else if(q.includes("story"))
+    add("Once upon a time, a curious human built an AI friend… and together they learned amazing things every day 🌟","bot");
+
+  else if(q.includes("bye"))
+    add("Goodbye! 👋 Come back anytime.","bot");
+
+  else
+    add("That's interesting 🤔 Tell me more or ask me anything!","bot");
 }
 
-/* ===== STUDY (FULLY FIXED) ===== */
+/* ================= STUDY ================= */
 function study(q){
   q=q.toLowerCase();
 
   if(q.includes("pronoun"))
-    add("Pronouns are words used instead of nouns, such as he, she, it, they.","bot");
+    add("Pronouns replace nouns, like he, she, it, they.","bot");
 
   else if(q.includes("urdu"))
-    add("Urdu is a language spoken mainly in Pakistan and India.","bot");
+    add("Urdu is a language mainly spoken in Pakistan and India.","bot");
 
   else if(q.includes("english"))
-    add("English is a global language used worldwide.","bot");
+    add("English is a global language used for communication worldwide.","bot");
 
   else if(q.includes("science"))
-    add("Science studies nature, experiments, and how the world works.","bot");
+    add("Science studies nature, experiments, and discoveries.","bot");
 
   else if(q.includes("history"))
-    add("History is the study of past events.","bot");
+    add("History studies past events and civilizations.","bot");
 
   else if(q.includes("geography"))
-    add("Geography studies Earth, land, maps, and climate.","bot");
+    add("Geography studies Earth, land, climate, and maps.","bot");
 
   else if(q.includes("photosynthesis"))
     add("Photosynthesis is how plants make food using sunlight, water, and carbon dioxide.","bot");
 
   else
-    add("Please ask a study topic like science, pronouns, urdu, history, etc.","bot");
+    add("Please ask a study topic like science, history, geography, or English.","bot");
 }
 
-/* ===== UTILITIES ===== */
+/* ================= UTIL ================= */
 function toggleTheme(){
   document.body.classList.toggle("light");
 }
@@ -207,8 +225,7 @@ function logout(){
   location.reload();
 }
 
-add("Welcome! Select a mode and start.","bot");
+add("Welcome! Select a mode and start chatting 🚀","bot");
 </script>
-
 </body>
 </html>

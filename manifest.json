@@ -1,12 +1,22 @@
 {
-  "background_color": "#0b1225",
-  "dir": "ltr",
+  "name": "Study And Help With Friends",
+  "short_name": "StudyHelp",
+  "description": "An ultra smart AI app for chat, math, study, and Islamic learning.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "name": "Study and Help with Friends",
-  "orientation": "any",
-  "scope": "/",
-  "short_name": "Study Help",
-  "start_url": "/Study_and_Help_with_Friends/",
-  "theme_color": "#2563eb",
-  "description": "Study, chat, math help, and Islamic learning support for students and friends."
+  "background_color": "#0b1225",
+  "theme_color": "#0b1225",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

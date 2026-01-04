@@ -5,7 +5,7 @@
 <title>Study And Help With Friends — Ultra Smart AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ✅ PWA REQUIRED (ADDED ONLY) -->
+<!-- ✅ PWA REQUIRED -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b1225">
 <link rel="icon" href="icon-192.png">
@@ -152,7 +152,7 @@ function send(){
   else chatAI(t);
 }
 
-/* ================= MATH ================= */
+/* ===== MATH ===== */
 function solveMath(q){
   try{
     if(!/^[0-9+\-*/().\s]+$/.test(q)){
@@ -165,7 +165,7 @@ function solveMath(q){
   }
 }
 
-/* ================= CHAT ================= */
+/* ===== CHAT ===== */
 function chatAI(q){
   q=q.toLowerCase();
   if(q.includes("hi")||q.includes("hello"))
@@ -184,7 +184,7 @@ function chatAI(q){
     add("That's interesting 🤔 Tell me more!","bot");
 }
 
-/* ================= STUDY ================= */
+/* ===== STUDY ===== */
 function study(q){
   q=q.toLowerCase();
   if(q.includes("english"))
@@ -201,7 +201,7 @@ function study(q){
     add("Please ask a study topic like science, history, geography, English, or Urdu.","bot");
 }
 
-/* ================= ISLAMIC MODE ================= */
+/* ===== ISLAMIC ===== */
 function islam(q){
   q=q.toLowerCase();
   if(q==="quran"){
@@ -227,7 +227,7 @@ function islam(q){
   }
 }
 
-/* ================= UTIL ================= */
+/* ===== UTIL ===== */
 function toggleTheme(){
   document.body.classList.toggle("light");
 }
@@ -244,7 +244,7 @@ function logout(){
 
 add("Welcome! Select a mode and start chatting 🚀","bot");
 
-/* ✅ SERVICE WORKER REGISTER (ADDED ONLY) */
+/* ✅ SERVICE WORKER */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js");

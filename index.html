@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ultra Smart AI Friend — Ultimate</title>
+<title>Study And Help With Friends — Ultra Smart AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -57,6 +57,7 @@ body{
   padding:10px 14px;
   border-radius:14px;
   max-width:85%;
+  white-space:pre-wrap;
 }
 .user{
   background:var(--user);
@@ -100,6 +101,7 @@ body{
   <button onclick="setMode('chat')">💬 Chat</button>
   <button onclick="setMode('math')">➗ Math</button>
   <button onclick="setMode('study')">📘 Study</button>
+  <button onclick="setMode('islam')">🕌 Islamic</button>
 </div>
 
 <div class="chat" id="chat"></div>
@@ -139,6 +141,7 @@ function send(){
 
   if(mode==="math") solveMath(t);
   else if(mode==="study") study(t);
+  else if(mode==="islam") islam(t);
   else chatAI(t);
 }
 
@@ -155,7 +158,7 @@ function solveMath(q){
   }
 }
 
-/* ================= SMART CHAT ================= */
+/* ================= CHAT ================= */
 function chatAI(q){
   q=q.toLowerCase();
 
@@ -163,36 +166,33 @@ function chatAI(q){
     add("Hello! 😊 How can I help you today?","bot");
 
   else if(q.includes("how are you"))
-    add("I am doing great! Thanks for asking 😊 What would you like to talk about?","bot");
+    add("I am doing great! Thanks for asking 😊","bot");
 
   else if(q.includes("who are you"))
     add("I am your Ultra Smart AI Friend, designed to help, teach, and chat with you.","bot");
 
-  else if(q.includes("what can you do"))
-    add("I can chat, solve math, explain science, history, geography, English, and more!","bot");
+  else if(q.includes("who made you"))
+    add("I was made by a young Muslim developer to help students learn and grow 🌟","bot");
 
-  else if(q.includes("story"))
-    add("Once upon a time, a curious human built an AI friend… and together they learned amazing things every day 🌟","bot");
+  else if(q.includes("what can you do"))
+    add("I can chat, solve math, help with studies, and support Islamic learning.","bot");
 
   else if(q.includes("bye"))
     add("Goodbye! 👋 Come back anytime.","bot");
 
   else
-    add("That's interesting 🤔 Tell me more or ask me anything!","bot");
+    add("That's interesting 🤔 Tell me more!","bot");
 }
 
 /* ================= STUDY ================= */
 function study(q){
   q=q.toLowerCase();
 
-  if(q.includes("pronoun"))
-    add("Pronouns replace nouns, like he, she, it, they.","bot");
+  if(q.includes("english"))
+    add("English is a global language used for communication worldwide.","bot");
 
   else if(q.includes("urdu"))
-    add("Urdu is a language mainly spoken in Pakistan and India.","bot");
-
-  else if(q.includes("english"))
-    add("English is a global language used for communication worldwide.","bot");
+    add("Urdu is the national language of Pakistan.","bot");
 
   else if(q.includes("science"))
     add("Science studies nature, experiments, and discoveries.","bot");
@@ -203,11 +203,41 @@ function study(q){
   else if(q.includes("geography"))
     add("Geography studies Earth, land, climate, and maps.","bot");
 
-  else if(q.includes("photosynthesis"))
-    add("Photosynthesis is how plants make food using sunlight, water, and carbon dioxide.","bot");
-
   else
-    add("Please ask a study topic like science, history, geography, or English.","bot");
+    add("Please ask a study topic like science, history, geography, English, or Urdu.","bot");
+}
+
+/* ================= ISLAMIC MODE ================= */
+function islam(q){
+  q=q.toLowerCase();
+
+  if(q==="quran"){
+    add("📖 Quran is the holy book of Allah.\nType:\n• Surah Fatiha\n• Surah Ikhlas\n• Surah Nas\n• Hifz help","bot");
+  }
+
+  else if(q.includes("surah fatiha")){
+    add("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمَٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ","bot");
+  }
+
+  else if(q.includes("surah ikhlas")){
+    add("قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ","bot");
+  }
+
+  else if(q.includes("surah nas")){
+    add("قُلْ أَعُوذُ بِرَبِّ النَّاسِ\nمَلِكِ النَّاسِ\nإِلَٰهِ النَّاسِ\nمِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ\nالَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ\nمِنَ الْجِنَّةِ وَالنَّاسِ","bot");
+  }
+
+  else if(q.includes("allah")){
+    add("Allah is One. He has no partner. He is the Most Merciful 🤍","bot");
+  }
+
+  else if(q.includes("hifz")){
+    add("🌟 MashaAllah! May Allah make your Hifz easy and bless your memory 🤲📖","bot");
+  }
+
+  else{
+    add("🕌 Islamic Mode: Type 'Quran' or a Surah name.","bot");
+  }
 }
 
 /* ================= UTIL ================= */

@@ -1,12 +1,11 @@
 {
   "name": "StudyBuddy AI",
   "short_name": "StudyBuddy",
-  "description": "AI app for chat, math, study, and Islamic learning.",
-  "start_url": "./",
+  "description": "StudyBuddy AI helps students with chat, math, study, and Islamic learning.",
+  "start_url": "/StudyBuddy_AI/",
   "display": "standalone",
   "background_color": "#0b1225",
   "theme_color": "#0b1225",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",

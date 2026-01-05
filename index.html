@@ -8,9 +8,11 @@
 <!-- ✅ PWA REQUIRED -->
 <link rel="manifest" href="./manifest.json">
 <meta name="description" content="StudyBuddy AI helps students with chat, math, study, and Islamic learning.">
+<meta name="application-name" content="StudyBuddy AI">
 <meta name="theme-color" content="#0b1225">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <style>
@@ -245,10 +247,10 @@ function logout(){
 
 add("Welcome! Select a mode and start chatting 🚀","bot");
 
-/* ✅ SERVICE WORKER */
+/* ✅ SERVICE WORKER (FIXED PATH) */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js");
+    navigator.serviceWorker.register("./sw.js");
   });
 }
 </script>

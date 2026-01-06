@@ -5,9 +5,9 @@
 <title>StudyBuddy AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ✅ PWA REQUIRED -->
+<!-- PWA -->
 <link rel="manifest" href="./manifest.json">
-<meta name="description" content="StudyBuddy AI helps students with chat, math, study, and Islamic learning.">
+<meta name="description" content="StudyBuddy AI helps students with chat, math, study, games, stories, and Islamic learning.">
 <meta name="application-name" content="StudyBuddy AI">
 <meta name="theme-color" content="#0b1225">
 
@@ -18,14 +18,12 @@
 <style>
 :root{
   --bg:#0b1225;
-  --card:#111a33;
   --user:#2563eb;
   --bot:#1f2937;
   --text:#ffffff;
 }
 .light{
   --bg:#f3f4f6;
-  --card:#ffffff;
   --user:#2563eb;
   --bot:#e5e7eb;
   --text:#000000;
@@ -69,14 +67,8 @@ body{
   max-width:85%;
   white-space:pre-wrap;
 }
-.user{
-  background:var(--user);
-  align-self:flex-end;
-}
-.bot{
-  background:var(--bot);
-  align-self:flex-start;
-}
+.user{background:var(--user);align-self:flex-end;}
+.bot{background:var(--bot);align-self:flex-start;}
 .bottom{
   display:flex;
   gap:6px;
@@ -93,7 +85,6 @@ body{
   border:none;
   border-radius:10px;
   background:#22c55e;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -102,22 +93,23 @@ body{
 <div class="app">
 
 <div class="top">
-  <button onclick="toggleTheme()">🌗 Theme</button>
-  <button onclick="exportChat()">⬇ Export</button>
-  <button onclick="logout()">🚪 Logout</button>
+  <button onclick="toggleTheme()">🌗</button>
+  <button onclick="showInfo()">ℹ️</button>
+  <button onclick="exportChat()">⬇</button>
 </div>
 
 <div class="mode-bar">
-  <button onclick="setMode('chat')">💬 Chat</button>
-  <button onclick="setMode('math')">➗ Math</button>
-  <button onclick="setMode('study')">📘 Study</button>
-  <button onclick="setMode('islam')">🕌 Islamic</button>
+  <button onclick="setMode('chat')">💬</button>
+  <button onclick="setMode('math')">➗</button>
+  <button onclick="setMode('study')">📘</button>
+  <button onclick="setMode('islam')">🕌</button>
+  <button onclick="setMode('games')">🎮</button>
 </div>
 
 <div class="chat" id="chat"></div>
 
 <div class="bottom">
-  <input id="input" placeholder="Ask something..." onkeydown="if(event.key==='Enter')send()">
+  <input id="input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')send()">
   <button onclick="send()">▶</button>
 </div>
 
@@ -134,12 +126,11 @@ function add(text,cls){
   d.innerText=text;
   chat.appendChild(d);
   chat.scrollTop=chat.scrollHeight;
-  chatLog.push((cls==="user"?"User: ":"AI: ")+text);
 }
 
 function setMode(m){
   mode=m;
-  add("Mode switched to "+m.toUpperCase(),"bot");
+  add("Mode: "+m.toUpperCase(),"bot");
 }
 
 function send(){
@@ -152,107 +143,71 @@ function send(){
   if(mode==="math") solveMath(t);
   else if(mode==="study") study(t);
   else if(mode==="islam") islam(t);
+  else if(mode==="games") games(t);
   else chatAI(t);
 }
 
-/* ===== MATH ===== */
-function solveMath(q){
-  try{
-    if(!/^[0-9+\-*/().\s]+$/.test(q)){
-      add("Please enter a valid math expression.","bot");
-      return;
-    }
-    add("Answer: "+Function("return "+q)(),"bot");
-  }catch{
-    add("Math error.","bot");
-  }
-}
-
-/* ===== CHAT ===== */
+/* CHAT */
 function chatAI(q){
   q=q.toLowerCase();
-  if(q.includes("hi")||q.includes("hello"))
-    add("Hello! 😊 How can I help you today?","bot");
-  else if(q.includes("how are you"))
-    add("I am doing great! Thanks for asking 😊","bot");
-  else if(q.includes("who are you"))
-    add("I am your StudyBuddy AI, designed to help, teach, and chat with you.","bot");
-  else if(q.includes("who made you"))
-    add("I was made by a young Muslim developer to help students learn and grow 🌟","bot");
-  else if(q.includes("what can you do"))
-    add("I can chat, solve math, help with studies, and support Islamic learning.","bot");
-  else if(q.includes("bye"))
-    add("Goodbye! 👋 Come back anytime.","bot");
-  else
-    add("That's interesting 🤔 Tell me more!","bot");
+  if(q.includes("story")){
+    add("📖 STORY:\nOnce there was a child who believed learning could change the world. That child built StudyBuddy AI and helped thousands 🌍✨","bot");
+  }
+  else add("🤖 I am StudyBuddy AI — try Math, Games, Story, Quran, or Study!","bot");
 }
 
-/* ===== STUDY ===== */
+/* MATH */
+function solveMath(q){
+  try{
+    add("Answer: "+Function("return "+q)(),"bot");
+  }catch{add("Math error","bot");}
+}
+
+/* STUDY */
 function study(q){
-  q=q.toLowerCase();
-  if(q.includes("english"))
-    add("English is a global language used for communication worldwide.","bot");
-  else if(q.includes("urdu"))
-    add("Urdu is the national language of Pakistan.","bot");
-  else if(q.includes("science"))
-    add("Science studies nature, experiments, and discoveries.","bot");
-  else if(q.includes("history"))
-    add("History studies past events and civilizations.","bot");
-  else if(q.includes("geography"))
-    add("Geography studies Earth, land, climate, and maps.","bot");
-  else
-    add("Please ask a study topic like science, history, geography, English, or Urdu.","bot");
+  add("📘 Study Mode helps with Science, English, History & more.","bot");
 }
 
-/* ===== ISLAMIC ===== */
+/* ISLAM */
 function islam(q){
-  q=q.toLowerCase();
-  if(q==="quran"){
-    add("📖 Quran is the holy book of Allah.\nType:\n• Surah Fatiha\n• Surah Ikhlas\n• Surah Nas\n• Hifz help","bot");
-  }
-  else if(q.includes("surah fatiha")){
-    add("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\n\nالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمَٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ","bot");
-  }
-  else if(q.includes("surah ikhlas")){
-    add("قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ","bot");
-  }
-  else if(q.includes("surah nas")){
-    add("قُلْ أَعُوذُ بِرَبِّ النَّاسِ\nمَلِكِ النَّاسِ\nإِلَٰهِ النَّاسِ\nمِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ\nالَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ\nمِنَ الْجِنَّةِ وَالنَّاسِ","bot");
-  }
-  else if(q.includes("allah")){
-    add("Allah is One. He has no partner. He is the Most Merciful 🤍","bot");
-  }
-  else if(q.includes("hifz")){
-    add("🌟 MashaAllah! May Allah make your Hifz easy and bless your memory 🤲📖","bot");
-  }
-  else{
-    add("🕌 Islamic Mode: Type 'Quran' or a Surah name.","bot");
-  }
+  add("🕌 Islamic Mode:\nType Quran, Surah Ikhlas, Surah Fatiha.","bot");
 }
 
-/* ===== UTIL ===== */
-function toggleTheme(){
-  document.body.classList.toggle("light");
+/* GAMES */
+let secret=Math.floor(Math.random()*10)+1;
+function games(q){
+  if(q==="guess"){
+    secret=Math.floor(Math.random()*10)+1;
+    add("🎯 Guess number 1–10","bot");
+  }
+  else if(!isNaN(q)){
+    add(Number(q)===secret?"🎉 Correct!":"❌ Try again","bot");
+  }
+  else add("🎮 Type 'guess' or a number","bot");
 }
+
+/* INFO */
+function showInfo(){
+  add(
+"ℹ️ StudyBuddy AI\n\n• Chat 🤖\n• Math ➗\n• Study 📘\n• Islamic 🕌\n• Games 🎮\n• Stories 📖\n\nBuilt by a young genius 🌟",
+"bot");
+}
+
+function toggleTheme(){document.body.classList.toggle("light");}
 function exportChat(){
-  const b=new Blob([chatLog.join("\n")],{type:"text/plain"});
+  const b=new Blob([chat.innerText],{type:"text/plain"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(b);
   a.download="chat.txt";
   a.click();
 }
-function logout(){
-  location.reload();
+
+/* SERVICE WORKER */
+if("serviceWorker"in navigator){
+  navigator.serviceWorker.register("sw.js");
 }
 
-add("Welcome! Select a mode and start chatting 🚀","bot");
-
-/* ✅ SERVICE WORKER (FIXED PATH) */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js");
-  });
-}
+add("🚀 Welcome to StudyBuddy AI!","bot");
 </script>
 </body>
 </html>

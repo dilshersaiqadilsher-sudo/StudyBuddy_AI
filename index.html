@@ -5,11 +5,9 @@
 <title>StudyBuddy AI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PWA -->
 <link rel="manifest" href="./manifest.json">
+<meta name="description" content="StudyBuddy AI helps students learn with chat, math, games, and Islamic knowledge.">
 <meta name="theme-color" content="#0b1225">
-<meta name="description" content="StudyBuddy AI helps students learn with chat, math, games, stories and Islamic learning.">
-<meta name="application-name" content="StudyBuddy AI">
 
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -24,7 +22,6 @@
 }
 .light{
   --bg:#f3f4f6;
-  --user:#2563eb;
   --bot:#e5e7eb;
   --text:#000000;
 }
@@ -48,7 +45,7 @@ body{
   display:flex;
   gap:6px;
 }
-button{
+.top button,.mode-bar button{
   flex:1;
   padding:8px;
   border:none;
@@ -66,14 +63,9 @@ button{
   border-radius:14px;
   max-width:85%;
   white-space:pre-wrap;
-  animation: pop 0.4s ease;
 }
-@keyframes pop{
-  from{transform:scale(0.9);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-.user{background:var(--user);align-self:flex-end}
-.bot{background:var(--bot);align-self:flex-start}
+.user{background:var(--user);align-self:flex-end;}
+.bot{background:var(--bot);align-self:flex-start;}
 .bottom{
   display:flex;
   gap:6px;
@@ -86,6 +78,9 @@ button{
   border:none;
 }
 .bottom button{
+  padding:10px;
+  border:none;
+  border-radius:10px;
   background:#22c55e;
 }
 </style>
@@ -95,23 +90,21 @@ button{
 <div class="app">
 
 <div class="top">
-  <button onclick="toggleTheme()">🌗</button>
-  <button onclick="showInfo()">ℹ️</button>
-  <button onclick="exportChat()">⬇</button>
+  <button onclick="toggleTheme()">🌗 Theme</button>
+  <button onclick="exportChat()">⬇ Export</button>
 </div>
 
 <div class="mode-bar">
-  <button onclick="setMode('chat')">💬</button>
-  <button onclick="setMode('math')">➗</button>
-  <button onclick="setMode('study')">📘</button>
-  <button onclick="setMode('islam')">🕌</button>
-  <button onclick="setMode('games')">🎮</button>
+  <button onclick="setMode('chat')">💬 Chat</button>
+  <button onclick="setMode('math')">➗ Math</button>
+  <button onclick="setMode('games')">🎮 Games</button>
+  <button onclick="setMode('info')">ℹ️ Info</button>
 </div>
 
 <div class="chat" id="chat"></div>
 
 <div class="bottom">
-  <input id="input" placeholder="Type here..." onkeydown="if(event.key==='Enter')send()">
+  <input id="input" placeholder="Ask something..." onkeydown="if(event.key==='Enter')send()">
   <button onclick="send()">▶</button>
 </div>
 
@@ -120,7 +113,6 @@ button{
 <script>
 let mode="chat";
 let chatLog=[];
-let secretNumber=null;
 const chat=document.getElementById("chat");
 
 function add(text,cls){
@@ -129,7 +121,7 @@ function add(text,cls){
   d.innerText=text;
   chat.appendChild(d);
   chat.scrollTop=chat.scrollHeight;
-  chatLog.push((cls==="user"?"User: ":"AI: ")+text);
+  chatLog.push(text);
 }
 
 function setMode(m){
@@ -145,75 +137,67 @@ function send(){
   add(t,"user");
 
   if(mode==="math") math(t);
-  else if(mode==="study") study(t);
-  else if(mode==="islam") islam(t);
   else if(mode==="games") games(t);
+  else if(mode==="info") info();
   else chatAI(t);
 }
 
 /* CHAT */
 function chatAI(q){
-  q=q.toLowerCase();
-  if(q.includes("hi")) add("Hello 😊","bot");
-  else if(q.includes("story"))
-    add("✨ Once there was a child who trusted Allah and never gave up. Allah rewarded him with success. Moral: Believe in Allah and yourself 🤍","bot");
-  else if(q.includes("bye"))  
-    add("Goodbye! See you soon. 😊","bot");
-  else add("Tell me more 😊","bot");
+  add("You are doing great! Ask me math, games, or info 😊","bot");
 }
 
 /* MATH */
 function math(q){
   try{
-    if(!/^[0-9+\-*/().\s]+$/.test(q))
-      return add("Invalid math ❌","bot");
     add("Answer: "+Function("return "+q)(),"bot");
-  }catch{add("Math error ❌","bot")}
-}
-
-/* STUDY */
-function study(q){
-  add("📘 Study Mode: Science, Math, English, History","bot");
-}
-
-/* ISLAM */
-function islam(q){
-  if(q.includes("motivation"))
-    add("🤍 Allah says: Indeed with hardship comes ease (94:6)","bot");
-  else add("🕌 Ask about Quran or Surah","bot");
+  }catch{
+    add("Try simple numbers like 2+2","bot");
+  }
 }
 
 /* GAMES */
 function games(q){
-  if(q==="guess"){
-    secretNumber=Math.floor(Math.random()*5)+1;
-    add("🎲 Guess number 1-5","bot");
-  }else if(secretNumber){
-    if(parseInt(q)===secretNumber){
-      add("🎉 Correct!","bot");
-      secretNumber=null;
-    }else add("❌ Try again","bot");
-  }else add("Type 'guess' to play","bot");
+  const games=[
+    "🎲 Guess a number between 1 and 5",
+    "🧩 Riddle: What has hands but cannot clap?",
+    "🔢 Solve: 5 × 6",
+    "❓ Quiz: Capital of Pakistan?"
+  ];
+  add(games[Math.floor(Math.random()*games.length)],"bot");
+}
+
+/* INFO */
+function info(){
+  add(
+`📱 StudyBuddy AI can:
+• Chat with you
+• Solve math
+• Play games
+• Help learning
+• Grow smarter with you
+
+Made with love 💚`,
+"bot");
 }
 
 /* UTIL */
-function toggleTheme(){document.body.classList.toggle("light")}
+function toggleTheme(){
+  document.body.classList.toggle("light");
+}
 function exportChat(){
-  const b=new Blob([chatLog.join("\n")]);
+  const b=new Blob([chatLog.join("\n")],{type:"text/plain"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(b);
   a.download="chat.txt";
   a.click();
 }
-function showInfo(){
-  alert("StudyBuddy AI can chat, solve math, teach studies, play games, tell stories and help in Islamic learning 🌟");
-}
 
 add("Welcome to StudyBuddy AI 🚀","bot");
 
 /* SERVICE WORKER */
-if("serviceWorker"in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"));
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
 </script>
 </body>

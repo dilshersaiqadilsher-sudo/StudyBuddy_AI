@@ -9,9 +9,6 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0b1225">
 
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-
 <style>
 :root{
   --bg:#0b1225;
@@ -89,17 +86,17 @@ button{
 <div class="app">
 
 <div class="top">
-  <button onclick="toggleTheme()">🌗 Theme</button>
-  <button onclick="exportChat()">⬇ Export</button>
-  <button onclick="location.reload()">🚪 Reset</button>
+  <button onclick="toggleTheme()">🌗</button>
+  <button onclick="exportChat()">⬇</button>
+  <button onclick="location.reload()">🔄</button>
 </div>
 
 <div class="mode-bar">
-  <button onclick="setMode('chat')">💬 Chat</button>
-  <button onclick="setMode('math')">➗ Math</button>
-  <button onclick="setMode('games')">🎮 Games</button>
-  <button onclick="setMode('quiz')">🧠 Quiz</button>
-  <button onclick="setMode('islam')">🕌 Islam</button>
+  <button onclick="setMode('chat')">💬</button>
+  <button onclick="setMode('math')">➗</button>
+  <button onclick="setMode('games')">🎮</button>
+  <button onclick="setMode('quiz')">🧠</button>
+  <button onclick="setMode('islam')">🕌</button>
 </div>
 
 <div class="chat" id="chat"></div>
@@ -115,6 +112,14 @@ button{
 let mode="chat";
 let chatLog=[];
 const chat=document.getElementById("chat");
+let userName=localStorage.getItem("sb_name")||"";
+
+const quran=[
+  {s:"Ikhlas 112:1",t:"Say: He is Allah, the One."},
+  {s:"Baqarah 2:38",t:"Guidance will come to you from Me."},
+  {s:"Rahman 55:13",t:"Which of the favors of your Lord will you deny?"},
+  {s:"Isra 17:82",t:"The Quran is healing and mercy for believers."}
+];
 
 function add(text,cls){
   const d=document.createElement("div");
@@ -140,34 +145,62 @@ function send(){
   if(mode==="math") math(t);
   else if(mode==="games") games();
   else if(mode==="quiz") quiz();
-  else if(mode==="islam") islam();
+  else if(mode==="islam") islam(t);
   else chatAI(t);
 }
 
-/* CHAT */
+/* CHAT AI */
 function chatAI(q){
   q=q.toLowerCase();
-  if(q.includes("hi")) add("Hello 😊","bot");
-  else if(q.includes("who made you")) add("Made by a young Muslim developer 🌟","bot");
-  else add("Tell me more 🤔","bot");
+
+  if(q.startsWith("my name is")){
+    userName=q.replace("my name is","").trim();
+    localStorage.setItem("sb_name",userName);
+    add("Nice to meet you, "+userName+" 😊","bot");
+  }
+  else if(q.includes("who are you"))
+    add("I am StudyBuddy AI, your smart learning companion.","bot");
+
+  else if(q.includes("what can you do"))
+    add(
+`I can help you with:
+• Smart chatting
+• Math solving
+• Quizzes
+• Games
+• Quran & Islam
+• Horror stories`,
+"bot");
+
+  else if(q.includes("your name"))
+    add("My name is StudyBuddy AI.","bot");
+
+  else if(q.includes("horror"))
+    add(horrorStory(),"bot");
+
+  else if(q.includes("hello")||q.includes("hi"))
+    add("Assalamu Alaikum "+(userName||"")+" 🌙","bot");
+
+  else
+    add("I'm thinking 🤔 Tell me more.","bot");
 }
 
 /* MATH */
 function math(q){
   try{
     if(!/^[0-9+\-*/(). ]+$/.test(q)){
-      add("Enter valid math only","bot");return;
+      add("Only math allowed.","bot");return;
     }
     add("Answer: "+Function("return "+q)(),"bot");
-  }catch{add("Error","bot");}
+  }catch{add("Math error.","bot");}
 }
 
 /* GAMES */
 function games(){
   const g=[
-    "🎲 Guess a number from 1 to 10",
+    "🎲 Guess a number from 1–10",
     "🧠 Riddle: What has keys but no locks?",
-    "🎯 Try mental math: 8×7?"
+    "🎯 Mental math: 14 × 7?"
   ];
   add(g[Math.floor(Math.random()*g.length)],"bot");
 }
@@ -176,36 +209,55 @@ function games(){
 function quiz(){
   const q=[
     "🧠 Capital of Pakistan?",
-    "🧠 5 daily prayers name?",
-    "🧠 6 × 6 = ?"
+    "🕌 How many daily prayers?",
+    "📐 8 × 9 = ?"
   ];
   add(q[Math.floor(Math.random()*q.length)],"bot");
 }
 
-/* ISLAM */
-function islam(){
-  const i=[
-    "🕌 Allah is One",
-    "📖 Quran is guidance",
-    "🤲 Say: Alhamdulillah",
-    "🕋 Pray 5 times daily"
-  ];
-  add(i[Math.floor(Math.random()*i.length)],"bot");
+/* ISLAM + QURAN SEARCH */
+function islam(q){
+  q=q.toLowerCase();
+  const found=quran.find(v=>q.includes(v.s.split(" ")[0].toLowerCase()));
+  if(found)
+    add("📖 "+found.s+": "+found.t,"bot");
+  else
+    add(quran[Math.floor(Math.random()*quran.length)].t,"bot");
+}
+
+/* HORROR */
+function horrorStory(){
+return `
+👻 HORROR STORY 👻
+
+At 3:17 AM, a message came:
+"Why did you leave me?"
+
+The sender was his own number.
+
+Then another message:
+"I'm behind you."
+
+The room was empty.
+
+But the mirror…
+was smiling.
+`;
 }
 
 /* UTIL */
 function toggleTheme(){document.body.classList.toggle("light");}
+
 function exportChat(){
   const b=new Blob([chatLog.join("\n")],{type:"text/plain"});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(b);
-  a.download="chat.txt";
+  a.download="studybuddy-chat.txt";
   a.click();
 }
 
 add("Welcome to StudyBuddy AI 🚀","bot");
 
-/* SERVICE WORKER */
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js");
 }
